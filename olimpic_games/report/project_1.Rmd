@@ -1,0 +1,545 @@
+---
+title: "![](images/BI_logo.png){width="200" height="70"}"
+author: "Smirnov Viktor https://github.com/Smirness"
+date: "11/23/2022"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    theme: spacelab
+    toc: yes
+    toc_float: yes
+subtitle: Project 1
+---
+
+```{=html}
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 16px;
+  }
+td {  /* Table  */
+  font-size: 12px;
+}
+h1.title {
+  font-size: 30px;
+}
+h1 { /* Header 1 */
+  font-size: 30px;
+}
+h2 { /* Header 2 */
+    font-size: 24px;
+}
+h3 { /* Header 3 */
+  font-size: 36px;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+
+</style>
+```
+
+------------------------------------------------------------------------
+
+# Introduction
+
+This project looks at data on participants in the of the Olympic Games in the last 120 years. Completed 16 tasks on working with dataframe. Each title corresponds to one task.
+
+There are tables in archive. Access via link: <https://stepik.org/media/attachments/lesson/603865/athlete_events.zip>. It's including 12 files with csv format.
+
+```{python}
+from zipfile import ZipFile
+import pandas as pd
+```
+
+```{python}
+from zipfile import ZipFile
+
+file = "C:/Users/Viktor/BI_Stat_2022/olimpic_games/data/athlete_events.zip"
+# opening the zip file in READ mode
+with ZipFile(file, 'r') as zip:
+    zip.printdir()
+```
+
+# Task 1
+
+The data are divided into several files. The function **merger()** combines the observations into a single table.
+
+Syntaxis the function:\
+`merger(zipfile, file_type, save_type, path_output, name_output)`\
+Default command for merging tables from zip file `merger("C:/Users/Viktor/BI_Stat_2021/olimpic_games/data/athlete_events.zip", "csv")`
+
+```{python function}
+def merger(zipfile, file_type, save_type="csv", path_output="Default", name_output="Default"):
+    """
+    This function merging into one data frame several files that are compressed into one zip file.
+    :param zipfile: path to zip file with table datas
+    :param file_type: file type of table datas. Accepting csv or excel.
+    :param save_type: file type for merged table. Default is csv.
+    :param path_output: path for saving merged table. 
+                        Default save in folder where is zipfile.
+    :param name_output: name for saved merged table. 
+                        Default saving as zipfile name.
+    :return file: saved merged table.
+    """
+    # for opening multiple file types
+    ft_read = dict(csv=pd.read_csv, excel=pd.read_excel)
+    ft_write = dict(csv="to_csv", excel="to_excel")
+
+    pd_file_type = ft_read[file_type]
+    ft_write_type = ft_write[save_type]
+
+    # if path_output is Default, then saving in folder with zipfile
+    if path_output == "Default":
+        path_output = zipfile.split(sep="/")
+        path_output = '/'.join(map(str, path_output[:-1]))
+
+    # if name_output is Default, then saving as name of zipfile
+    if name_output == "Default":
+        path_file = zipfile.split(sep="/")
+        name_output = path_file[-1].split(sep=".")[0]
+
+    # merging into one data frame several files that are compressed into one zip file
+    df = pd.concat(
+        [pd_file_type(ZipFile(zipfile).open(i)) for i in ZipFile(zipfile).namelist()],
+        ignore_index=True
+    )
+    getattr(df, ft_write_type)(path_output + "/" + name_output + "." + save_type)
+
+```
+
+**Ans 1 there is the function merging into one data frame several files that are compressed into one zip file.**
+
+# Task 2
+
+See if all the data is really correct? If you find something wrong If you find something wrong, please correct it. Explain why you used this approach. Maybe it has alternatives?
+
+```{python}
+df = pd.read_csv("C:/Users/Viktor/BI_Stat_2022/olimpic_games/data/athlete_events.csv")
+```
+
+```{python}
+df.shape
+df.dtypes
+```
+
+There is 15 parameters. 'Unnamed: 0' is string number. So let's remove this one.
+
+```{python}
+df.drop("Unnamed: 0", axis=1, inplace = True)
+df.dtypes
+```
+
+The dataset has the following features:
+
+-   ID -- Unique number for each athlete
+
+-   Name -- Athlete's name
+
+-   Sex -- M or F
+
+-   Age -- Integer
+
+-   Height -- In centimeters
+
+-   Weight -- In kilograms
+
+-   Team -- Team name
+
+-   NOC -- National Olympic Committee 3-letter code
+
+-   Games -- Year and season
+
+-   Year -- Integer
+
+-   Season -- Summer or Winter
+
+-   City -- Host city
+
+-   Sport -- Sport
+
+-   Event -- Event
+
+-   Medal -- Gold, Silver, Bronze, or NA
+
+## Missing values
+
+```{python}
+df.isna().sum()
+```
+
+An important parameter of this dataframe is the name. Without a name it is impossible to identify the participant. No name = no participant. Delete. The remaining lines that have nan left. But be careful when processing the data.
+
+```{python}
+df = df.dropna(axis = 0, subset=["Name"])
+df.isna().sum()
+```
+
+## Data in wrong format
+
+```{python}
+df.dtypes
+```
+
+Let's rewrite data types
+
+```{python}
+for param in ['Age', 'Height', 'Year']:
+  df[param] = df[param].astype('Int64')
+```
+
+## Checking unique names of parametes
+
+```{python}
+df.columns
+df.Sex.unique()
+df.Season.unique()
+```
+
+There is unexpected G sex. Let's see who is it.
+
+```{python}
+import numpy as np
+df.index[df['Sex'] == 'G'].tolist()
+print(df.loc[158593]) # Participant is Man. His name is Pavel Mike.
+print(df.loc[158625]) # Participant is Man. His name is Anatoly Mikhaylin.
+
+# rewrite their sex as M
+df.Sex.loc[158593] = 'M'
+df.Sex.loc[158625] = 'M'
+```
+
+## Duplicated records
+
+```{python}
+all_columns = ['ID', 'Name', 'Sex', 'Age', 'Height', 'Weight', 'Team', 'NOC', 'Games', 'Year', 'Season', 'City', 'Sport', 'Event', 'Medal']
+```
+
+```{python}
+df_dupl = df[df.duplicated(subset=all_columns, keep= False)]
+df_dupl.shape
+```
+
+1997 lines are duplicates. Let's get rid of them.
+
+```{python}
+print("Before dropping",df.shape)
+df.drop_duplicates(subset=all_columns, keep='first', inplace=True)
+print("After dropping",df.shape)
+```
+
+Checking
+
+```{python}
+df_dupl = df[df.duplicated(subset=all_columns, keep= False)]
+df_dupl.shape
+```
+
+There are no duplicates. Now the dataframe is ready for working.
+
+## Statistical summary. Wrong Data.
+
+We selected the parameters that are available for statistical analysis.
+
+```{python}
+stat_columns = ['Age', 'Height', 'Weight', 'Year']
+```
+
+```{python}
+df[stat_columns].describe(percentiles = [0.01,0.99])
+```
+
+There is unexpected values as max-age, max-height, min-weight. It's look like unreal human parameters. Lets' rewrite these errors on actual value or as NaN
+
+```{python}
+import numpy as np
+df.index[df['Age'] == 240].tolist()
+print(df.loc[45461])
+df.Age.loc[45461] = 24 #out expactation is retyping 0. And the age is 24
+
+df.index[df['Height'] == 340].tolist()
+print(df.loc[45650])
+df.Height.loc[45650] = 176 # Her Height is 176 cm, not 340.
+
+df.index[df['Weight'] == 7].tolist()
+print(df.loc[135885])
+df.Weight.loc[135885] = np.nan 
+
+```
+
+Keeping fixed dataframe:
+
+```{python}
+df.to_csv("C:/Users/Viktor/BI_Stat_2022/olimpic_games/data/athlete_events_fixed.csv")
+```
+
+**Ans 2 we got fixed table**
+
+# Task 3
+
+Find out the age of the youngest athletes of both sexes at the 1992 Olympics.
+
+```{python}
+df_1992 = df.query("Year == 1992")
+df_1992_M = df_1992.query('Sex == "M"')
+df_1992_F = df_1992.query('Sex == "F"')
+print("The age of the youngest male athlete is",df_1992_M.Age.min())
+print("The age of the youngest female athlete is",df_1992_F.Age.min())
+```
+
+**Answ 3 At the 1992 Olympics the age of the youngest male athlete is 11 and the female athlete is 12.**\
+
+# Task 4
+
+Mean and SD of the Height variable Calculate the mean and standard deviation of the Height variable for athletes of each sex.
+
+```{python}
+df_M = df.query('Sex == "M"')
+df_F = df.query('Sex == "F"')
+mean_Height_M = round(df_M.Height.mean(skipna=True), 2)
+mean_Height_F = round(df_F.Height.mean(skipna=True), 2)
+SD_Height_M = round(df_M.Height.std(skipna=True), 2)
+SD_Height_F = round(df_F.Height.std(skipna=True), 2)
+```
+
+```{python}
+table_t4 = pd.DataFrame([('Male', mean_Height_M, SD_Height_M),
+                        ('Female', mean_Height_F, SD_Height_F)],
+                        columns=('Sex', 'Mean', 'SD'))
+print("Statistic about Height for both sex:", '\n', table_t4)
+```
+
+**Ans 4 the table with calculated the mean and standard deviation of the Height variable for athletes of each sex:**
+
+| Sex        | **Mean** | **SD** |
+|------------|----------|--------|
+| **Male**   | 178.86   | 9.36   |
+| **Female** | 167.84   | 8.78   |
+
+# Task 5
+
+Calculate the mean value and standard deviation of the variable Height in tennis players (sex = F) at the 2000 Olympics. Round the answer to the first sign after the dot.
+
+```{python}
+df_F_Tenn_2000 = df.query('Sex == "F" and Sport == "Tennis" and Year == 2000')
+Mean_Height_F_Tenn_2000 = round(df_F_Tenn_2000.Height.mean(skipna=True), 1)
+SD_Height_F_Tenn_2000 = round(df_F_Tenn_2000.Height.std(skipna=True), 1)
+print('The Height for tennis female player in 2000 is', '(',Mean_Height_F_Tenn_2000,'±',SD_Height_F_Tenn_2000,')','centimeters')
+```
+
+# Task 6
+
+In which sport was the heaviest athlete at the 2006 Olympics?
+
+```{python}
+df_2006 = df.query('Year == 2006')
+heaviest_athlete_2006 = df_2006[df_2006['Weight'] == df_2006.Weight.max()]
+print(heaviest_athlete_2006['Sport'])
+```
+
+**Ans 6. The heaviest athlete at the 2006 Olympics participated in Skeleton sport.**
+
+# Task 7
+
+How many gold medals were won by women from 1980 to 2010 years?
+
+```{python}
+df_F_f80_t10_gold = df.query('Sex == "F" and 1980 <= Year <=2010 and Medal == "Gold"')
+df_F_f80_t10_gold.shape
+
+```
+
+**Ans 7 2249 gold medals were won by women from 1980 to 2010 years**
+
+# Task 8
+
+How many times has John Aalberg competed in the Olympics in different years?
+
+```{python}
+df.query('Name == "John Aalberg"').Year.unique
+```
+
+**Ans 8 John Aalberg participated two times in the Olympics in different years.**
+
+# Task 9
+
+Identify the least and most represented (by number of participants) age groups of athletes at the 2008 Olympic Games. Possible age groups: [15-25), [25-35), [35-45), [45-55].
+
+```{python}
+df_2008 = df.query('Year == 2008')
+t9_inter = []
+t9_quant = []
+
+for i in range (10,100,5):
+  t9_inter += [[i,i+4]]  
+  t9_quant += [len(df_2008.query('%d<Age<%d'%(i,i+10)))]
+  
+df_t9 = pd.DataFrame({
+                      'interval': t9_inter, 
+                      'quantity': t9_quant
+                        })
+df_t9.drop(df_t9.index[df_t9.quantity == 0], inplace=True)
+print(df_t9.query('quantity == quantity.min()'))
+print(df_t9.query('quantity == quantity.max()'))
+```
+
+**Ans 9 The least paticipants in 65-69 ages and most is 20-24 represented of athletes at the 2008 Olympic Games.**
+
+# Task 10
+
+How different was the number of sports in the 2002 Olympics compared to the 1994 Olympics?
+
+```{python}
+df_num_sports_2008 = len(df.query('Year == 2008').Sport.unique())
+df_num_sports_1994 = len(df.query('Year == 1994').Sport.unique())
+dif_t10 = len(df.query('Year == 2008').Sport.unique()) - len(df.query('Year == 1994').Sport.unique())
+print('In 1994 there were %d sports, and in 2008 there were %d. Over the years, the number of sports has increased by %d'%(df_num_sports_1994, df_num_sports_2008, dif_t10))
+```
+
+**Ans 10 In 1994 there were 12 sports, and in 2008 there were 34. Over the years, the number of sports has increased by 22**
+
+# Task 11
+
+Print for the Winter and Summer Olympics separately the top 3 countries for each type of medals.
+
+```{python}
+def task_11(Season, Medal):
+  """
+  Print top 3 country with a medal in a season
+  :param Season: Summer/Winter 
+  :param Medal: Gold/Bronze/Silver 
+  "return: list
+  """
+  Season, Medal # no idea why noting the parametes. It's needed.
+  df_t11 = []
+  df_t11_noc = []
+  noc_top = []
+  
+  df_t11 = df.query('Season == %s and Medal == %s'%(Season, Medal)).groupby('NOC').groups
+  
+  for k, v in df_t11.items():
+    df_t11_noc += [[k, len([item for item in v if item])]]
+  
+  df_t11_noc.sort(key = lambda x: x[1], reverse = True)
+  
+  for noc in df_t11_noc[0:3]:
+    noc_top += [noc[0]] 
+  return noc_top
+```
+
+No idea at all how to fix code for using only one type ' or " when we call function. But it's working. heh...
+
+```{python}
+table_t11 = pd.DataFrame(
+  [('Summer', task_11('"Summer"', '"Gold"'), task_11('"Summer"', '"Silver"'), task_11('"Summer"', '"Bronze"')), ('Winter', task_11('"Winter"', '"Gold"'), task_11('"Winter"', '"Silver"'), task_11('"Winter"', '"Bronze"'))],
+  columns=('Season', 'Gold', 'Silver', 'Bronze'))
+print(table_t11)
+```
+
+**Ans 11 The table with top contries for each type of medals in both season.**
+
+| **Season** | **Gold**      | **Silver**    | **Bronze**    |
+|------------|---------------|---------------|---------------|
+| **Summer** | USA, URS, GBR | USA, GBR, URS | USA, GER, GBR |
+| **Winter** | CAN, URS, USA | USA, CAN, NOR | FIN, SWE, USA |
+
+# Task 12
+
+Create a new variable **Height_z\_scores** and save the values of the **Height** variable after standardization.
+
+```{python}
+import scipy.stats as stats
+import numpy as np
+
+df_t12 = df
+df_t12.insert(
+        loc = 5, 
+        column = 'Height_z_scores', 
+        value = (df_t12.Height - df_t12.Height.mean())/df_t12.Height.std(ddof=0)
+        )
+
+print('Columns in new dataframe:\n', df_t12.columns)
+print('The first 3 values in new variable. Height_z_scores: \n',df_t12.Height_z_scores.head(3))
+
+```
+
+**Ans 12 New variable 'Height_z\_scores' is near 'Height'.**
+
+# Task 13
+
+Optional: Create a new variable Height_min_max_scaled and save the values of the Height variable to it after applying the min-max normalization (you will need to figure out how it works). (2 points)
+
+**Ans 13 the task skipped**
+
+# Task 14
+
+Compare the height, weight, and age of the men and women who participated in the Winter Olympic Winter Games. Please format the results so that we can immediately use them for the article. Bugs appear when creating graphs using Python in R-studio, so continue work with R language.
+
+```{r}
+r_df <- read.csv(("C:/Users/Viktor/BI_Stat_2022/olimpic_games/data/athlete_events_fixed.csv"))
+```
+
+```{r}
+library(dplyr)
+
+sex <- unlist(r_df %>% select(Sex))
+height <- unlist(r_df %>% select(Height))
+weight <- unlist(r_df %>% select(Weight))
+age  <- unlist(r_df %>% select(Age))
+
+t14_data = data.frame(sex, height, weight, age)
+# drop rows with NA values
+t14_data <- na.omit(t14_data)
+
+head(t14_data)
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(t14_data, aes(x=sex, y=height, color=sex)) + geom_boxplot() + xlab('Sex') + ylab('Height, cm')
+ggplot(t14_data, aes(x=sex, y=weight, color=sex)) + geom_boxplot() + xlab('Sex') + ylab('Weight, kg')
+ggplot(t14_data, aes(x=sex, y=age, color=sex)) + geom_boxplot()    + xlab('Sex') + ylab('Age')
+```
+
+**Ans 14 These pictures are available for download**
+
+# Task 15
+
+We are particularly interested in the Team and Medal variables. What can you tell us about them? what can you tell us about them? Do we have any reason to believe that they might be related? How did you determine that? The parameters "Team" and "Medal" can be interrelated. For example, a team contains strong participants who win a medal every year.
+
+```{r eval=FALSE, include=FALSE}
+library(dplyr)
+
+Team <- unlist(r_df %>% select(Team))
+Medal  <- unlist(r_df %>% select(Medal))
+
+t15_data = data.frame(Team, Medal)
+# drop rows with NA values
+t15_data <- na.omit(t15_data)
+
+# unique name teams
+name <- c(unique(t15_data[c("Team")]))
+length(unique(t15_data[c("Team")]))
+
+# subsets group by meduls
+t15_gold <- subset(t15_data, Medal == 'Gold')
+t15_silver <- subset(t15_data, Medal == 'Silver')
+t15_bronze <- subset(t15_data, Medal == 'Bronze')
+t15_nothing <- subset(t15_data, Medal == '')
+
+t15_data %>% group_by(Team) %>% summarise(t15_data, Gold_medals = n(Gold))
+
+
+#count teams 
+t15_gold %>% group_by(Team) %>% summarise(Gold_medals = n())
+t15_silver %>% group_by(Team) %>% summarise(Silver_medals = n())
+t15_bronze  %>% group_by(Team) %>% summarise(Bronz_medals = n())
+t15_nothing %>% group_by(Team) %>% summarise(no_medals = n())
+```
+
+**Ans 15 the task skipped**
