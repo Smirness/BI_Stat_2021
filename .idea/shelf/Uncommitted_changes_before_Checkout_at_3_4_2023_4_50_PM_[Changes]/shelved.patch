@@ -1,0 +1,61 @@
+Index: .idea/workspace.xml
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -1,7 +1,9 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="e38dbf8d-deee-4efd-bb99-739f256efdb1" name="Changes" comment="add hw_1" />
++    <list default="true" id="e38dbf8d-deee-4efd-bb99-739f256efdb1" name="Changes" comment="add hw_2">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -28,7 +30,7 @@
+     "RunOnceActivity.OpenProjectViewOnStart": "true",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "WebServerToolWindowFactoryState": "false",
+-    "last_opened_file_path": "C:/Users/smirn/projects/BI_Stat_2022",
++    "last_opened_file_path": "C:/Users/smirn/projects/BI-ml-2023",
+     "nodejs_package_manager_path": "npm",
+     "settings.editor.selected.configurable": "ssh.settings"
+   }
+@@ -44,6 +46,9 @@
+       <workItem from="1676825387923" duration="268000" />
+       <workItem from="1677000776497" duration="41000" />
+       <workItem from="1677434886710" duration="100000" />
++      <workItem from="1677435002837" duration="1018000" />
++      <workItem from="1677592630524" duration="18000" />
++      <workItem from="1677926752005" duration="63000" />
+     </task>
+     <task id="LOCAL-00001" summary="add hw_1">
+       <created>1676825543812</created>
+@@ -52,7 +57,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1676825543812</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="add hw_2">
++      <created>1677435138316</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1677435138316</updated>
++    </task>
++    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -71,6 +83,7 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="add hw_1" />
+-    <option name="LAST_COMMIT_MESSAGE" value="add hw_1" />
++    <MESSAGE value="add hw_2" />
++    <option name="LAST_COMMIT_MESSAGE" value="add hw_2" />
+   </component>
+ </project>
+\ No newline at end of file
