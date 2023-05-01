@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11" project-jdk-type="Python SDK" />
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   <component name="PyPackaging">
     <option name="earlyReleasesAsUpgrades" value="true" />
   </component>
 >>>>>>> ml_hw_5
+=======
+>>>>>>> ml_hw_7_8
 </project>
