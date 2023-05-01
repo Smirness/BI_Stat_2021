@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="9dbb148d-a8a0-4b24-b010-d18237f4aecb" name="Changes" comment="update data" />
+=======
+    <list default="true" id="e38dbf8d-deee-4efd-bb99-739f256efdb1" name="Changes" comment="add hw_1" />
+>>>>>>> ml_hw_2
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
     <envs>
       <env key="FLASK_APP" value="app" />
@@ -22,6 +27,12 @@
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="ml_hw_7_8" />
+=======
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+>>>>>>> ml_hw_2
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,12 +40,17 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="2OY6SOxsFrbMsEfM22mENB7sXP5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+=======
+  <component name="ProjectId" id="2Lxv8DPfv8JIr70wmjhpeNkh8dj" />
+>>>>>>> ml_hw_2
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -201,6 +217,38 @@
       <updated>1682892956841</updated>
     </task>
     <option name="localTasksCounter" value="3" />
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/smirn/projects/BI_Stat_2022",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ssh.settings"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e38dbf8d-deee-4efd-bb99-739f256efdb1" name="Changes" comment="" />
+      <created>1676825386475</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1676825386475</updated>
+      <workItem from="1676825387923" duration="268000" />
+      <workItem from="1677000776497" duration="41000" />
+      <workItem from="1677434886710" duration="100000" />
+    </task>
+    <task id="LOCAL-00001" summary="add hw_1">
+      <created>1676825543812</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1676825543812</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+>>>>>>> ml_hw_2
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,7 +266,12 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+<<<<<<< HEAD
     <MESSAGE value="update data" />
     <option name="LAST_COMMIT_MESSAGE" value="update data" />
+=======
+    <MESSAGE value="add hw_1" />
+    <option name="LAST_COMMIT_MESSAGE" value="add hw_1" />
+>>>>>>> ml_hw_2
   </component>
 </project>
